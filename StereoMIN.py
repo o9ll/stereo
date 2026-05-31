@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stereo MIN: Patch (download patched module) / Revert (UNPATCHED backup). Stdlib + Tk only."""
+"""Stereo MIN (Windows only): Patch (download patched module) / Revert (UNPATCHED backup). Stdlib + Tk only."""
 
 # region Imports And Optional Modules
 
@@ -72,23 +72,20 @@ def _lerp_rgb(c1: str, c2: str, t: float) -> str:
 
 # region Remote Configuration
 
-GIT_OWNER = "o9ll"
-GIT_REPO = "stereo"
-GIT_BRANCH = "main"
+GIT_BASE_API = f"https://api.github.com/repos/o9ll/stereo/contents"
+GIT_BASE_RAW = f"https://raw.githubusercontent.com/o9ll/stereo/main"
 
-GIT_BASE_API = f"https://api.github.com/repos/{GIT_OWNER}/{GIT_REPO}/contents"
-GIT_BASE_RAW = f"https://raw.githubusercontent.com/{GIT_OWNER}/{GIT_REPO}/{GIT_BRANCH}"
+MIN_WIN_GIT_CONTENTS_API = f"https://api.github.com/repos/o9ll/stereo/contents/installer"
+# macOS / Linux (disabled): same repo installer/ tree when non-Windows support returns.
+#MIN_LNX_GIT_CONTENTS_API = f"https://api.github.com/repos/o9ll/stereo/contents/installer"
+#MIN_MAC_ZIP_URL = f"https://api.github.com/repos/o9ll/stereo/contents/installer"
 
-PATCHED_NODES_DIR = "installer"
-
-MIN_WIN_GIT_CONTENTS_API = f"{GIT_BASE_API}/{PATCHED_NODES_DIR}/Windows"
-MIN_LNX_GIT_CONTENTS_API = f"{GIT_BASE_API}/{PATCHED_NODES_DIR}/Linux"
-MIN_MAC_ZIP_URL = f"{GIT_BASE_API}/{PATCHED_NODES_DIR}/macOS"
+PATCHED_NODES_DIR = "installer"  # repo voice bundle root (Windows offline: installer/Windows beside this script)
 
 OFFLINE_SKIP_REMOTE_ENV = "DISCORD_STEREO_SKIP_REMOTE"
 SKIP_min_SELF_UPDATE_ENV = "DISCORD_STEREO_SKIP_min_SELF_UPDATE"
 
-MIN_SELF_UPDATE_RAW_URL = f"{GIT_BASE_RAW}/StereoMIN.py"
+MIN_SELF_UPDATE_RAW_URL = f"https://raw.githubusercontent.com/o9ll/stereo/main/StereoMIN.py"
 
 _RE_APP_VERSION_ASSIGN = re.compile(r"^\s*APP_VERSION\s*=\s*[\"']([^\"']+)[\"']", re.MULTILINE)
 
@@ -192,21 +189,24 @@ def _restart_min_program(min_path: Path) -> None:
                 )
                 sys.exit(1)
 
-    try:
-        try:
-            os.chdir(cwd)
-        except Exception:
-            pass
-        os.execv(exe, child_args)
-    except OSError as exc:
-        try:
-            _spawn_detach_and_hard_exit()
-        except Exception as exc2:
-            sys.stderr.write(
-                "%s failed to restart after self-update (%s); %s. Re-open manually.\n"
-                % (APP_NAME, human_exc(exc), human_exc(exc2))
-            )
-            sys.exit(1)
+    # Non-Windows restart (macOS / Linux): os.execv respawn — disabled; Stereo MIN is Windows-only.
+    #try:
+        #try:
+            #os.chdir(cwd)
+        #except Exception:
+            #pass
+        #os.execv(exe, child_args)
+    #except OSError as exc:
+        #try:
+            #_spawn_detach_and_hard_exit()
+        #except Exception as exc2:
+            #sys.stderr.write(
+                #"%s failed to restart after self-update (%s); %s. Re-open manually.\n"
+                #% (APP_NAME, human_exc(exc), human_exc(exc2))
+            #)
+            #sys.exit(1)
+    sys.stderr.write("%s self-update restart is only supported on Windows.\n" % APP_NAME)
+    sys.exit(1)
 
 
 def _min_self_update_skip_reason_or_ready_path() -> Tuple[Optional[str], Optional[Path]]:
@@ -230,30 +230,39 @@ def _min_self_update_skip_reason_or_ready_path() -> Tuple[Optional[str], Optiona
 # endregion StereoMIN Auto Update
 
 # region Platform And Paths
+# Windows-only. macOS / Linux paths and helpers are preserved in comments below for a future release.
+
+
+def _require_windows() -> None:
+    if sys.platform != "win32":
+        raise RuntimeError(
+            "Stereo MIN is Windows-only.\n"
+            "macOS and Linux are not supported in this build."
+        )
 
 
 def detect_platform_key() -> str:
-    sp = sys.platform.lower()
-    if sp.startswith("win"):
-        return "windows"
-    if sp.startswith("darwin"):
-        return "macos"
-    if sp.startswith("linux"):
-        return "linux"
-    return sp or "unknown"
+    _require_windows()
+    return "windows"
+    # macOS (Darwin):
+    #if sys.platform.lower().startswith("darwin"):
+        #return "macos"
+    # Linux:
+    #if sys.platform.lower().startswith("linux"):
+        #return "linux"
 
 
 def min_data_dir() -> Path:
-    pf = detect_platform_key()
-    if pf == "windows":
-        root = os.environ.get("LOCALAPPDATA") or os.environ.get("APPDATA") or str(Path.home())
-        return Path(root) / "StereoMIN"
-    if pf == "macos":
-        return Path.home() / "Library" / "Application Support" / "StereoMIN"
-    xdg = os.environ.get("XDG_DATA_HOME", "").strip()
-    if xdg:
-        return Path(xdg) / "StereoMIN"
-    return Path.home() / ".local" / "share" / "StereoMIN"
+    _require_windows()
+    root = os.environ.get("LOCALAPPDATA") or os.environ.get("APPDATA") or str(Path.home())
+    return Path(root) / "StereoMIN"
+    # macOS: ~/Library/Application Support/StereoMIN
+    #return Path.home() / "Library" / "Application Support" / "StereoMIN"
+    # Linux: $XDG_DATA_HOME/StereoMIN or ~/.local/share/StereoMIN
+    #xdg = os.environ.get("XDG_DATA_HOME", "").strip()
+    #if xdg:
+        #return Path(xdg) / "StereoMIN"
+    #return Path.home() / ".local" / "share" / "StereoMIN"
 
 
 def log_path() -> Path:
@@ -285,41 +294,43 @@ def _readable_os() -> str:
 
 def _platform_label(key: str) -> str:
     k = (key or "").strip().lower()
-    return {"windows": "Windows", "macos": "macOS", "linux": "Linux"}.get(k, k.title() or "Unknown")
+    return {"windows": "Windows"}.get(k, k.title() or "Unknown")
+    # macOS / Linux:
+    #return {"windows": "Windows", "macos": "macOS", "linux": "Linux"}.get(k, k.title() or "Unknown")
 
 
 def _default_discord_roots() -> Tuple[Path, ...]:
-    pf = detect_platform_key()
-    home = Path.home()
-    if pf == "windows":
-        la = os.environ.get("LOCALAPPDATA") or ""
-        return tuple(
-            Path(p)
-            for p in (
-                os.path.join(la, "Discord"),
-                os.path.join(la, "DiscordCanary"),
-                os.path.join(la, "DiscordPTB"),
-                os.path.join(la, "DiscordDevelopment"),
-                os.path.join(la, "Lightcord"),
-                os.path.join(la, "Vencord"),
-                os.path.join(la, "Equicord"),
-                os.path.join(la, "BetterVencord"),
-            )
-            if p
+    _require_windows()
+    la = os.environ.get("LOCALAPPDATA") or ""
+    return tuple(
+        Path(p)
+        for p in (
+            os.path.join(la, "Discord"),
+            os.path.join(la, "DiscordCanary"),
+            os.path.join(la, "DiscordPTB"),
+            os.path.join(la, "DiscordDevelopment"),
+            os.path.join(la, "Lightcord"),
+            os.path.join(la, "Vencord"),
+            os.path.join(la, "Equicord"),
+            os.path.join(la, "BetterVencord"),
         )
-    if pf == "macos":
-        return (
-            home / "Library" / "Application Support" / "discord",
-            home / "Library" / "Application Support" / "discordcanary",
-            home / "Library" / "Application Support" / "discordptb",
-        )
-    return (
-        home / ".config" / "discord",
-        home / ".config" / "discordcanary",
-        home / ".config" / "discordptb",
-        home / ".config" / "discorddevelopment",
-        home / ".var" / "app" / "com.discordapp.Discord" / "config" / "discord",
+        if p
     )
+    # macOS: ~/Library/Application Support/discord*
+    #home = Path.home()
+    #return (
+        #home / "Library" / "Application Support" / "discord",
+        #home / "Library" / "Application Support" / "discordcanary",
+        #home / "Library" / "Application Support" / "discordptb",
+    #)
+    # Linux: ~/.config/discord* and Flatpak com.discordapp.Discord
+    #return (
+        #home / ".config" / "discord",
+        #home / ".config" / "discordcanary",
+        #home / ".config" / "discordptb",
+        #home / ".config" / "discorddevelopment",
+        #home / ".var" / "app" / "com.discordapp.Discord" / "config" / "discord",
+    #)
 
 
 def infer_discord_release_channel_from_root(discord_root: Path) -> Optional[str]:
@@ -601,13 +612,13 @@ def resolve_target(preferred_root: Optional[Path] = None) -> Tuple[Optional[Targ
     for r in roots:
         vd, app_dir, diag = find_voice_dir_with_diagnostics(r)
         if vd:
-            exe_name = _windows_client_exe_for_root(r) if detect_platform_key() == "windows" else None
+            exe_name = _windows_client_exe_for_root(r)
             return Target(discord_root=r, voice_dir=vd, app_dir=app_dir, exe_name=exe_name, diagnostics=None), ""
         if diag:
             last_diag = f"{r}: {diag}"
         vd2 = find_discord_voice_dir_under(r)
         if vd2:
-            exe_name = _windows_client_exe_for_root(r) if detect_platform_key() == "windows" else None
+            exe_name = _windows_client_exe_for_root(r)
             return Target(discord_root=r, voice_dir=vd2, app_dir=app_dir, exe_name=exe_name, diagnostics=None), ""
     msg = "Could not find `discord_voice.node`. Open Discord once (join a voice channel), then try again, or use Browse."
     if last_diag:
@@ -721,7 +732,7 @@ def _windows_kill_discord_update_processes_under_root(discord_root: Path) -> Non
 
 
 def stop_discord_processes(log: "Logger", *, target: Optional[Target] = None) -> None:
-    pf = detect_platform_key()
+    _require_windows()
     names = [
         "Discord",
         "DiscordCanary",
@@ -734,133 +745,120 @@ def stop_discord_processes(log: "Logger", *, target: Optional[Target] = None) ->
         "Update",
     ]
     try:
-        if pf == "windows":
-            for n in names:
-                if n.lower() == "update":
-                    continue
-                try:
-                    subprocess.run(
-                        ["taskkill", "/F", "/IM", f"{n}.exe"],
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL,
-                        check=False,
-                    )
-                except Exception:
-                    pass
-            try:
-                subprocess.run(
-                    ["taskkill", "/F", "/IM", "Discord*.exe"],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    check=False,
-                )
-            except Exception:
-                pass
-            try:
-                if target and target.discord_root and target.discord_root.is_dir():
-                    _windows_kill_discord_update_processes_under_root(target.discord_root)
-            except Exception:
-                pass
-            time.sleep(0.6)
-            log.ok("Closed Discord processes (best-effort).")
-            return
         for n in names:
+            if n.lower() == "update":
+                continue
             try:
                 subprocess.run(
-                    ["pkill", "-f", n],
+                    ["taskkill", "/F", "/IM", f"{n}.exe"],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                     check=False,
                 )
             except Exception:
                 pass
+        try:
+            subprocess.run(
+                ["taskkill", "/F", "/IM", "Discord*.exe"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+        except Exception:
+            pass
+        try:
+            if target and target.discord_root and target.discord_root.is_dir():
+                _windows_kill_discord_update_processes_under_root(target.discord_root)
+        except Exception:
+            pass
         time.sleep(0.6)
         log.ok("Closed Discord processes (best-effort).")
+        # macOS / Linux (disabled): best-effort pkill -f by client process name.
+        #for n in names:
+            #try:
+                #subprocess.run(["pkill", "-f", n], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+            #except Exception:
+                #pass
     except Exception as e:
         log.warn(f"Could not stop Discord processes: {human_exc(e)}")
 
 
 def relaunch_discord_for_target(target: Target, log: "Logger") -> None:
-    pf = detect_platform_key()
+    _require_windows()
     root = target.discord_root
+    upd = root / "Update.exe"
+    exe = (target.exe_name or _windows_client_exe_for_root(root)).strip() or "Discord.exe"
+    stereo_root = Path(os.environ.get("USERPROFILE", str(Path.home()))) / ".Stereo"
+    out_log = stereo_root / "StereoMINOut.txt"
+    err_log = stereo_root / "StereoMINErr.txt"
+    cflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 
-    if pf == "windows":
-        upd = root / "Update.exe"
-        exe = (target.exe_name or _windows_client_exe_for_root(root)).strip() or "Discord.exe"
-        tmp = os.environ.get("TEMP") or os.environ.get("TMP") or "."
-        out_log = Path(tmp) / "StereoMINOut.txt"
-        err_log = Path(tmp) / "StereoMINErr.txt"
-        cflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
-
-        def _popen_like_patcher(argv: list, cwd: str) -> None:
-            out_f = open(out_log, "w", encoding="utf-8", errors="replace")
+    def _popen_like_patcher(argv: list, cwd: str) -> None:
+        out_f = open(out_log, "w", encoding="utf-8", errors="replace")
+        try:
+            err_f = open(err_log, "w", encoding="utf-8", errors="replace")
             try:
-                err_f = open(err_log, "w", encoding="utf-8", errors="replace")
-                try:
-                    subprocess.Popen(
-                        argv,
-                        cwd=cwd,
-                        stdout=out_f,
-                        stderr=err_f,
-                        close_fds=False,
-                        creationflags=cflags,
-                    )
-                finally:
-                    err_f.close()
+                subprocess.Popen(
+                    argv,
+                    cwd=cwd,
+                    stdout=out_f,
+                    stderr=err_f,
+                    close_fds=False,
+                    creationflags=cflags,
+                )
             finally:
-                out_f.close()
+                err_f.close()
+        finally:
+            out_f.close()
 
-        if upd.is_file():
-            try:
-                _popen_like_patcher([str(upd), "--processStart", exe], str(root))
-                log.ok(f"Relaunched Discord via Update.exe ({exe})")
-                return
-            except Exception as e:
-                log.warn(f"Relaunch via Update.exe failed: {human_exc(e)}")
-
+    if upd.is_file():
         try:
-            app = target.app_dir or find_discord_app_dir(root)
-            if app:
-                exe_path = app / exe
-                if not exe_path.is_file() and exe != "Discord.exe":
-                    if (app / "Discord.exe").is_file():
-                        exe_path = app / "Discord.exe"
-                if exe_path.is_file():
-                    _popen_like_patcher([str(exe_path)], str(app))
-                    log.ok(f"Relaunched Discord directly ({exe_path.name})")
-                    return
-        except Exception as e:
-            log.warn(f"Could not locate app-* exe for relaunch: {human_exc(e)}")
-        log.warn("Could not relaunch Discord automatically. Please start it manually.")
-        return
-
-    if pf == "macos":
-        try:
-            subprocess.Popen(["open", "-a", "Discord"])
-            log.ok("Relaunched Discord (open -a Discord)")
-            return
-        except Exception:
-            pass
-        try:
-            subprocess.Popen(["open", "/Applications/Discord.app"])
-            log.ok("Relaunched Discord (/Applications/Discord.app)")
+            _popen_like_patcher([str(upd), "--processStart", exe], str(root))
+            log.ok(f"Relaunched Discord via Update.exe ({exe})")
             return
         except Exception as e:
-            log.warn(f"Could not relaunch Discord on macOS: {human_exc(e)}")
-        return
+            log.warn(f"Relaunch via Update.exe failed: {human_exc(e)}")
 
-    if pf == "linux":
-        for cmd in (["discord"], ["Discord"], ["flatpak", "run", "com.discordapp.Discord"]):
-            try:
-                subprocess.Popen(cmd)
-                log.ok(f"Relaunched Discord ({' '.join(cmd)})")
+    try:
+        app = target.app_dir or find_discord_app_dir(root)
+        if app:
+            exe_path = app / exe
+            if not exe_path.is_file() and exe != "Discord.exe":
+                if (app / "Discord.exe").is_file():
+                    exe_path = app / "Discord.exe"
+            if exe_path.is_file():
+                _popen_like_patcher([str(exe_path)], str(app))
+                log.ok(f"Relaunched Discord directly ({exe_path.name})")
                 return
-            except Exception:
-                continue
-        log.warn("Could not relaunch Discord automatically on Linux. Please start it manually.")
-        return
+    except Exception as e:
+        log.warn(f"Could not locate app-* exe for relaunch: {human_exc(e)}")
+    log.warn("Could not relaunch Discord automatically. Please start it manually.")
 
-    log.warn("Auto-relaunch is not supported on this OS.")
+    # macOS (disabled): `open -a Discord` or /Applications/Discord.app
+    #if pf == "macos":
+        #try:
+            #subprocess.Popen(["open", "-a", "Discord"])
+            #log.ok("Relaunched Discord (open -a Discord)")
+            #return
+        #except Exception:
+            #pass
+        #try:
+            #subprocess.Popen(["open", "/Applications/Discord.app"])
+            #log.ok("Relaunched Discord (/Applications/Discord.app)")
+            #return
+        #except Exception as e:
+            #log.warn(f"Could not relaunch Discord on macOS: {human_exc(e)}")
+
+    # Linux (disabled): native discord binary or Flatpak
+    #if pf == "linux":
+        #for cmd in (["discord"], ["Discord"], ["flatpak", "run", "com.discordapp.Discord"]):
+            #try:
+                #subprocess.Popen(cmd)
+                #log.ok(f"Relaunched Discord ({' '.join(cmd)})")
+                #return
+            #except Exception:
+                #continue
+        #log.warn("Could not relaunch Discord automatically on Linux. Please start it manually.")
 
 # endregion Process Management
 
@@ -918,12 +916,13 @@ def validate_download_payload(name: str, data: bytes) -> None:
     if head.startswith(b"<!DOCTYPE html") or head.startswith(b"<html") or b"<title>" in head[:200].lower():
         raise RuntimeError(f"{name}: download looks like HTML (rate limit / error page)")
     low = (name or "").lower()
-    binary_exts = (".node", ".dll", ".exe", ".tflite", ".so", ".dylib")
+    binary_exts = (".node", ".dll", ".exe", ".tflite")  # macOS/Linux: add ".so", ".dylib"
     if low.endswith(binary_exts) and len(data) < 1024:
         raise RuntimeError(f"{name}: binary download too small ({len(data)} bytes)")
 
 
 def extract_zip_bytes_to_dir(zip_bytes: bytes, dest: Path) -> None:
+    # macOS (disabled): zip payload install path — unused while Stereo MIN is Windows-only.
     if dest.exists():
         shutil.rmtree(dest, ignore_errors=True)
     safe_mkdir(dest)
@@ -950,14 +949,14 @@ def find_voice_dir_in_payload_dir(payload_root: Path) -> Optional[Path]:
 
 
 def patched_zip_url_for_platform() -> str:
-    pf = detect_platform_key()
-    if pf == "windows":
-        return MIN_WIN_GIT_CONTENTS_API
-    if pf == "macos":
-        return MIN_MAC_ZIP_URL
-    if pf == "linux":
-        return MIN_LNX_GIT_CONTENTS_API
+    _require_windows()
     return MIN_WIN_GIT_CONTENTS_API
+    # macOS (disabled):
+    #if detect_platform_key() == "macos":
+        #return MIN_MAC_ZIP_URL
+    # Linux (disabled):
+    #if detect_platform_key() == "linux":
+        #return MIN_LNX_GIT_CONTENTS_API
 
 
 def _download_git_contents_listing(api_url: str, timeout_s: int = 60) -> list:
@@ -1020,50 +1019,33 @@ def ensure_permanent_unpatched_backup(target: Target, log: "Logger") -> Path:
 
 
 def _local_patched_bundle_dir_for_platform() -> Optional[Path]:
-    pf = detect_platform_key()
+    _require_windows()
     ws = Path(__file__).resolve().parent
-    if pf == "windows":
-        return ws / PATCHED_NODES_DIR / "Windows"
-    if pf == "linux":
-        return ws / PATCHED_NODES_DIR / "Linux"
-    if pf == "macos":
-        return ws / PATCHED_NODES_DIR / "macOS"
-    return None
+    return ws / PATCHED_NODES_DIR / "Windows"
+    # Linux offline (disabled): ws / PATCHED_NODES_DIR / "Linux"
+    # macOS offline (disabled): ws / PATCHED_NODES_DIR / "macOS"
 
 
 def patch(target: Target, log: "Logger") -> None:
+    _require_windows()
     ensure_permanent_unpatched_backup(target, log)
     stop_discord_processes(log, target=target)
-    pf = detect_platform_key()
     staging = min_data_dir() / "staging" / "patched_payload"
     payload_voice: Optional[Path] = None
 
-    if pf == "windows" or pf == "linux":
-        if os.environ.get(OFFLINE_SKIP_REMOTE_ENV, "").strip() == "1":
-            local = _local_patched_bundle_dir_for_platform()
-            if not local or not local.is_dir():
-                raise RuntimeError(f"{OFFLINE_SKIP_REMOTE_ENV}=1 but local patched bundle folder was not found.")
-            log.info(f"Offline mode: using local patched bundle: {local}")
-            copy_dir_contents(local, staging)
-        else:
-            api = patched_zip_url_for_platform()
-            label = "Windows" if pf == "windows" else "Linux"
-            log.info(f"Fetching the latest patched module ({label})...")
-            download_git_folder_to_dir(api, staging, log)
-        payload_voice = find_voice_dir_in_payload_dir(staging)
+    if os.environ.get(OFFLINE_SKIP_REMOTE_ENV, "").strip() == "1":
+        local = _local_patched_bundle_dir_for_platform()
+        if not local.is_dir():
+            raise RuntimeError(f"{OFFLINE_SKIP_REMOTE_ENV}=1 but local patched bundle folder was not found.")
+        log.info(f"Offline mode: using local patched bundle: {local}")
+        copy_dir_contents(local, staging)
     else:
-        url = patched_zip_url_for_platform()
-        if "example.invalid" in url:
-            raise RuntimeError(
-                "Patched-binary download URL is a placeholder for this OS.\n"
-                "Configure PATCHED_* constants in StereoMIN.py."
-            )
-        log.info(f"Downloading patched voice module: {url}")
-        z = download_bytes(url)
-        validate_download_payload("patched payload", z)
-        log.ok(f"Downloaded {len(z)} bytes")
-        extract_zip_bytes_to_dir(z, staging)
-        payload_voice = find_voice_dir_in_payload_dir(staging)
+        log.info("Fetching the latest patched module (Windows)...")
+        download_git_folder_to_dir(MIN_WIN_GIT_CONTENTS_API, staging, log)
+    payload_voice = find_voice_dir_in_payload_dir(staging)
+
+    # macOS (disabled): download zip via MIN_MAC_ZIP_URL and extract_zip_bytes_to_dir(z, staging).
+    # Linux (disabled): same GitHub folder download as Windows (MIN_LNX_GIT_CONTENTS_API).
 
     if not payload_voice or not _looks_like_discord_voice_dir(payload_voice):
         raise RuntimeError("Downloaded payload does not contain a valid discord_voice module (discord_voice.node missing).")
@@ -1164,9 +1146,12 @@ class App:
         if tk is None:
             raise RuntimeError(
                 "tkinter is not available.\n\n"
-                "Windows/macOS: it should be included with Python.\n"
-                "Linux (Debian/Ubuntu): install it with: sudo apt-get install python3-tk"
+                "Windows: it should be included with Python."
+                # macOS / Linux (disabled):
+                #"macOS: it should be included with Python.\n"
+                #"Linux (Debian/Ubuntu): sudo apt-get install python3-tk"
             )
+        _require_windows()
         self.root = tk.Tk()
         try:
             if devmin is not None and hasattr(devmin, "sync_tk_scaling_from_display"):
@@ -1910,6 +1895,11 @@ class App:
 
 
 def main() -> int:
+    try:
+        _require_windows()
+    except RuntimeError as e:
+        sys.stderr.write(str(e) + "\n")
+        return 1
     if os.environ.get("DISCORD_STEREO_SELF_UPDATE_FLOW_TEST", "").strip() == "1":
         sys.stdout.write(APP_VERSION + "\n")
         try:
