@@ -358,8 +358,8 @@ $Script:Config = @{
     SampleRate = 48000; Bitrate = 248; Channels = "Stereo"
     AudioGainMultiplier = $AudioGainMultiplier; SkipBackup = $SkipBackup.IsPresent; AutoRelaunch = $true
     ModuleName = "discord_voice.node"
-    TempDir = "$env:USERPROFILE\.stereo\patcher"; BackupDir = "$env:USERPROFILE\.stereo\patcher\Backups"
-    LogFile = "$env:USERPROFILE\.stereo\patcher\patcher.log"; ConfigFile = "$env:USERPROFILE\.stereo\patcher\config.json"
+    TempDir = "$env:USERPROFILE\.Stereo\patcher"; BackupDir = "$env:USERPROFILE\.Stereo\patcher\Backups"
+    LogFile = "$env:USERPROFILE\.Stereo\patcher\patcher.log"; ConfigFile = "$env:USERPROFILE\.Stereo\patcher\config.json"
     MaxBackupsPerClient = 3
     MaxBackupAgeDays      = 45
     VoiceBackupAPI = "https://api.github.com/repos/o9ll/stereo/contents/patcher"
@@ -699,7 +699,7 @@ function Test-ScriptUpdateAvailable {
             Write-Log "Running from memory / web; skip self-update check" -Level Success
             return @{ UpdateAvailable = $false; Reason = "WebExecution" }
         }
-        $tempFile = Join-Path $env:USERPROFILE ".stereo\patcher\StereoPatcherUpdate$(Get-Random).ps1"
+        $tempFile = Join-Path $env:USERPROFILE ".Stereo\patcher\StereoPatcherUpdate$(Get-Random).ps1"
         try {
             $ts = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
             $updateUri = "$($Script:UPDATE_URL_BASE)$([char]0x3F)t=$ts&r=$(Get-Random)"
@@ -753,7 +753,7 @@ function Test-ScriptUpdateAvailable {
 function Update-ScriptPatch {
     param([string]$UpdatedScriptPath, [string]$CurrentScriptPath, [switch]$RestartAfter)
     if (-not (Test-Path $UpdatedScriptPath)) { Write-Log "Update file not found: $UpdatedScriptPath" -Level Error; return $false }
-    $batchFile = Join-Path $env:USERPROFILE ".stereo\patcher\StereoPatcherUpdate.bat"
+    $batchFile = Join-Path $env:USERPROFILE ".Stereo\patcher\StereoPatcherUpdate.bat"
     $bl = [System.Collections.Generic.List[string]]::new()
     [void]$bl.Add('@echo off')
     [void]$bl.Add('echo Applying update...')
@@ -767,7 +767,7 @@ function Update-ScriptPatch {
     [void]$bl.Add('echo Update applied successfully!')
     [void]$bl.Add('timeout /t 1 /nobreak >nul')
     if ($RestartAfter) {
-        $restartPs1 = Join-Path $env:USERPROFILE ".stereo\patcher\StereoPatcherRestart$([Guid]::NewGuid().ToString('N')).ps1"
+        $restartPs1 = Join-Path $env:USERPROFILE ".Stereo\patcher\StereoPatcherRestart$([Guid]::NewGuid().ToString('N')).ps1"
         $restartBody = Get-PatcherRestartHelperScriptContent -TargetScriptPath $CurrentScriptPath
         try {
             Set-Content -LiteralPath $restartPs1 -Value $restartBody -Encoding UTF8 -Force
@@ -3824,8 +3824,8 @@ function Start-Patching {
                 $updateExe = Join-Path $clientInfo.Path "Update.exe"
                 if (Test-Path $updateExe) {
                     Write-Log "Launching: $($clientInfo.Name.Trim())" -Level Info
-                    $discordOut = Join-Path $env:USERPROFILE ".stereo\patcher\StereoPatcherOut.txt"
-                    $discordErr = Join-Path $env:USERPROFILE ".stereo\patcher\StereoPatcherErr.txt"
+                    $discordOut = Join-Path $env:USERPROFILE ".Stereo\patcher\StereoPatcherOut.txt"
+                    $discordErr = Join-Path $env:USERPROFILE ".Stereo\patcher\StereoPatcherErr.txt"
                     try {
                         $p = Start-Process $updateExe -ArgumentList @("--processStart", $clientInfo.Exe) -WindowStyle Hidden -RedirectStandardOutput $discordOut -RedirectStandardError $discordErr -PassThru -ErrorAction Stop
                         Write-Log "Discord launch started (Update.exe PID=$($p.Id))." -Level Success
@@ -3976,8 +3976,8 @@ function Start-Patching {
             if (-not $discordPath) { $discordPath = $selectedClientInfo.Path }
             if ($discordPath -and (Test-Path $discordPath)) {
                 $updateExe = Join-Path $discordPath "Update.exe"
-                $discordOut = Join-Path $env:USERPROFILE ".stereo\patcher\StereoPatcherOut.txt"
-                $discordErr = Join-Path $env:USERPROFILE ".stereo\patcher\StereoPatcherErr.txt"
+                $discordOut = Join-Path $env:USERPROFILE ".Stereo\patcher\StereoPatcherOut.txt"
+                $discordErr = Join-Path $env:USERPROFILE ".Stereo\patcher\StereoPatcherErr.txt"
                 if (Test-Path $updateExe) {
                     Write-Log "Launching via Update.exe..." -Level Info
                     try {

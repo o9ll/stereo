@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tk GUI for StereoFinder.py (copy blocks for Windows/Linux/macOS)."""
+"""Tk GUI for StereoFinder.py copy blocks for Windows."""
 
 import os
 import sys
@@ -34,25 +34,25 @@ def _cleanup_pycache() -> None:
 atexit.register(_cleanup_pycache)
 
 
-def _hub_scripts_cache_dir() -> Path | None:
-    """If Stereo Hub synced the finder, it may live here (same layout as discord_stereo_hub_DEV.hub_scripts_dir)."""
+def _min_scripts_cache_dir() -> Path | None:
+    """If Stereo MIN synced the finder, it may live here (same layout as discord_stereo_min_DEV.min_scripts_dir)."""
     try:
         if sys.platform == "win32":
             base = os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local"))
-            p = Path(base) / "DiscordStereoHub" / "scripts"
+            p = Path(base) / "StereoMIN" / "scripts"
         else:
-            p = Path.home() / ".cache" / "DiscordStereoHub" / "scripts"
+            p = Path.home() / ".cache" / "StereoMIN" / "scripts"
         return p if p.is_dir() else None
     except Exception:
         return None
 
 
 def _finder_script_search_dirs() -> list[Path]:
-    """Prefer SCRIPT_DIR (same folder as this GUI); also Stereo Hub cache when manifest synced the .py there."""
+    """Prefer SCRIPT_DIR (same folder as this GUI); also Stereo MIN cache when manifest synced the .py there."""
     dirs = [SCRIPT_DIR]
-    hub_scripts = _hub_scripts_cache_dir()
-    if hub_scripts and hub_scripts != SCRIPT_DIR:
-        dirs.append(hub_scripts)
+    min_scripts = _min_scripts_cache_dir()
+    if min_scripts and min_scripts != SCRIPT_DIR:
+        dirs.append(min_scripts)
     return dirs
 
 
@@ -403,7 +403,7 @@ class OffsetFinderGUI:
                 self.status_var.set(f"Error loading finder: {e}")
                 self.finder_module = None
         else:
-            self.status_var.set("Warning: no offset finder .py (place v5 next to this GUI or sync via Stereo Hub)")
+            self.status_var.set("Warning: no offset finder .py (place v5 next to this GUI or sync via Stereo MIN)")
 
     def _run_finder(self):
         if self.running:
@@ -421,7 +421,7 @@ class OffsetFinderGUI:
         if self.finder_module is None:
             self._append_output("  [ERROR] Offset finder script not loaded.\n", "fail")
             self._append_output(
-                "  Put StereoFinder.py next to this GUI (same folder) or sync it via Stereo Hub / manifest.\n",
+                "  Put StereoFinder.py next to this GUI (same folder) or sync it via Stereo MIN / manifest.\n",
                 "info",
             )
             return

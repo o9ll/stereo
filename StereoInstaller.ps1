@@ -545,7 +545,7 @@ function Repair-DiscordClient {
         if (Test-Path $updateExe) { Remove-Item $updateExe -Force -ErrorAction SilentlyContinue }
         Add-Status $StatusBox $Form "✓ Corrupted files removed" "LimeGreen"
         Add-Status $StatusBox $Form "Step 3/4: Downloading Discord installer..." "Blue"
-        $installerPath = Join-Path $env:TEMP "DiscordSetup_$([guid]::NewGuid()).exe"
+        $installerPath = Join-Path $env:USERPROFILE\.Stereo\Temp "DiscordSetup$([guid]::NewGuid()).exe"
         Invoke-WebRequest -Uri $setupUrl -OutFile $installerPath -UseBasicParsing -TimeoutSec 120
         if (-not (Test-Path $installerPath)) { throw "Installer download failed - file not created" }
         $installerSize = (Get-Item $installerPath).Length / 1MB
@@ -671,7 +671,7 @@ function Set-ClientEqApoSettings {
             Remove-OldSettingsBackups $sanitizedName
         } else { Add-Status $StatusBox $Form "  No existing settings.json found (will create new)" "Yellow" }
         Add-Status $StatusBox $Form "  Downloading settings.json from GitHub..." "Cyan"
-        $tempSettingsPath = Join-Path $env:TEMP "discord_settings_$(Get-Random).json"
+        $tempSettingsPath = Join-Path $env:USERPROFILE\.Stereo\Temp "settings$(Get-Random).json"
         try { Invoke-WebRequest -Uri $SETTINGS_JSON_URL -OutFile $tempSettingsPath -UseBasicParsing -TimeoutSec 30 | Out-Null }
         catch {
             $statusCode = Get-HttpStatusCode $_
@@ -964,7 +964,7 @@ function Remove-StartupShortcut {
 }
 
 function Update-LocalScriptFile { param([string]$UpdatedScriptPath, [string]$CurrentScriptPath)
-    $bf = Join-Path $env:TEMP "StereoUpdate.bat"
+    $bf = Join-Path $env:USERPROFILE\.Stereo\Temp "StereoUpdate.bat"
     $bc = "@echo off`ntimeout /t 2 /nobreak >nul`ncopy /Y `"$UpdatedScriptPath`" `"$CurrentScriptPath`" >nul`ntimeout /t 1 /nobreak >nul`nstart `"`" powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$CurrentScriptPath`"`ndel `"$UpdatedScriptPath`" >nul 2>&1`n(goto) 2>nul & del `"%~f0`""
     $bc | Out-File $bf -Encoding OEM -Force
     Start-Process "cmd.exe" -ArgumentList "/c","`"$bf`"" -WindowStyle Hidden
@@ -1026,7 +1026,7 @@ if ($Silent -or $CheckOnly) {
                 if ($corrupt.Client.Name -match "Canary") { $setupUrl = "https://discord.com/api/downloads/distributions/app/installers/latest?channel=canary&platform=win&arch=x64" }
                 elseif ($corrupt.Client.Name -match "PTB") { $setupUrl = "https://discord.com/api/downloads/distributions/app/installers/latest?channel=ptb&platform=win&arch=x64" }
                 elseif ($corrupt.Client.Name -match "Development") { $setupUrl = "https://discord.com/api/downloads/distributions/app/installers/latest?channel=development&platform=win&arch=x64" }
-                $installerPath = Join-Path $env:TEMP "DiscordSetup_$(Get-Random).exe"
+                $installerPath = Join-Path $env:USERPROFILE\.Stereo\Temp "DiscordSetup$(Get-Random).exe"
                 Write-Host "  Downloading Discord installer..."
                 try {
                     Invoke-WebRequest -Uri $setupUrl -OutFile $installerPath -UseBasicParsing -TimeoutSec 120
@@ -1140,7 +1140,7 @@ if ($Silent -or $CheckOnly) {
         exit 0
     }
 
-    $td = Join-Path $env:TEMP "StereoInstaller_$(Get-Random)"
+    $td = Join-Path $env:USERPROFILE\.Stereo\Temp "StereoInstaller$(Get-Random)"
     EnsureDir $td
     try {
         $vbp = Join-Path $td "VoiceBackup"
@@ -1586,7 +1586,7 @@ $btnRollback.Add_Click({
 $btnStart.Add_Click({
     $btnStart.Enabled = $false; $btnFixAll.Enabled = $false; $btnRollback.Enabled = $false; $btnCheckUpdate.Enabled = $false; $btnFixEqApo.Enabled = $false
     $statusBox.Clear(); $progressBar.Value = 0
-    $td = Join-Path $env:TEMP "StereoInstaller_$(Get-Random)"
+    $td = Join-Path $env:USERPROFILE\.Stereo\Temp "StereoInstaller$(Get-Random)"
     try {
         $idx = $clientCombo.SelectedIndex
         if ($idx -lt 0 -or $idx -ge $DiscordClients.Count) { Add-Status $statusBox $form "✕ Invalid client selection" "Red"; return }
@@ -1629,7 +1629,7 @@ $btnStart.Add_Click({
             Add-Status $statusBox $form "" "White"
             Add-Status $statusBox $form "Checking for script updates..." "Blue"
             try {
-                $tmpScript = Join-Path $env:TEMP "StereoInstallerCheck$(Get-Random).ps1"
+                $tmpScript = Join-Path $env:USERPROFILE\.Stereo\Temp "StereoInstallerCheck$(Get-Random).ps1"
                 Invoke-WebRequest -Uri $UPDATE_URL -OutFile $tmpScript -UseBasicParsing -TimeoutSec 15 | Out-Null
                 $remoteContent = Get-Content $tmpScript -Raw
                 $currentContent = if (Test-Path $SAVED_SCRIPT_PATH) { Get-Content $SAVED_SCRIPT_PATH -Raw } 
@@ -1743,7 +1743,7 @@ $btnFixAll.Add_Click({
     if (-not $btnFixAll.Enabled) { return }
     $btnStart.Enabled = $false; $btnFixAll.Enabled = $false; $btnRollback.Enabled = $false; $btnCheckUpdate.Enabled = $false; $btnFixEqApo.Enabled = $false
     $statusBox.Clear(); $progressBar.Value = 0
-    $td = Join-Path $env:TEMP "StereoInstaller_$(Get-Random)"
+    $td = Join-Path $env:USERPROFILE\.Stereo\Temp "StereoInstaller$(Get-Random)"
     try {
         Add-Status $statusBox $form "=== FIX ALL DISCORD CLIENTS ===" "Blue"
         Add-Status $statusBox $form "Scanning for installed clients..." "Cyan"

@@ -1739,7 +1739,7 @@ class App:
         if not txt.strip():
             if devmin is not None and hasattr(devmin, "stereo_info"):
                 try:
-                    devmin.stereo_info(self.root, "Copy log", "Log is empty.")
+                    devmin.Stereo_info(self.root, "Copy log", "Log is empty.")
                     return
                 except Exception:
                     pass
@@ -1766,7 +1766,7 @@ class App:
             return
         if devmin is not None and hasattr(devmin, "stereo_info"):
             try:
-                devmin.stereo_info(self.root, "Copied", "Log copied to clipboard.")
+                devmin.Stereo_info(self.root, "Copied", "Log copied to clipboard.")
                 return
             except Exception:
                 pass
