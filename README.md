@@ -4,18 +4,18 @@
 
 **Filterless true stereo · High-bitrate Opus · Windows · macOS · Linux**
 
-[![Windows](https://img.shields.io/badge/Windows-Active-00C853?style=flat-square)](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux#windows-voice-fixer)
-[![macOS](https://img.shields.io/badge/macOS-Active-00C853?style=flat-square)](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux#macos)
-[![Linux](https://img.shields.io/badge/Linux-Active-00C853?style=flat-square)](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux#linux-launcher)
+[![Windows](https://img.shields.io/badge/Windows-Active-00C853?style=flat-square)](https://github.com/o9ll/stereo#windows-voice-fixer)
+[![macOS](https://img.shields.io/badge/macOS-Active-00C853?style=flat-square)](https://github.com/o9ll/stereo#macos)
+[![Linux](https://img.shields.io/badge/Linux-Active-00C853?style=flat-square)](https://github.com/o9ll/stereo#linux-launcher)
 [![Voice Playground](https://img.shields.io/badge/Voice%20Playground-Labs-white?style=flat-square)](https://discord-voice.xyz/)
 
 </div>
 
-<a id="stereo-hub"></a>
+<a id="stereo-min"></a>
 
-## 📢 Stereo Hub — latest release
+## 📢 Stereo MIN — latest release
 
-**Stereo Hub** — **[latest release on GitHub](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/releases/latest)** (always the current Stereo Hub build). Download **`discord_stereo_hub.py`** from that page (same file as [`STEREO HUB/discord_stereo_hub.py`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/STEREO%20HUB/discord_stereo_hub.py) on `main`) and run it with **Python 3.8 or higher** — this is the supported entry for everyone **EXCEPT MacOS!!!** as the Codeberg is down and the patcher will be merging to this repo soon — see [**macOS**](#macos).
+**Stereo MIN** — **[latest release on GitHub](https://github.com/o9ll/stereo/releases/latest)** (always the current Stereo MIN build). Download **`StereoMIN.py`** from that page (same file as [`StereoMIN.py`](https://github.com/o9ll/stereo/blob/main/StereoMIN.py) on `main`) and run it with **Python 3.8 or higher** — this is the supported entry for everyone **EXCEPT MacOS!!!** as the Codeberg is down and the patcher will be merging to this repo soon — see [**macOS**](#macos).
 
 ---
 
@@ -33,7 +33,7 @@
 
 <a id="advanced-legacy-patch-methods"></a>
 
-> Older flow: **v0.5** [`Updates.zip`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/releases/tag/v0.5) and the full [`Updates/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates) tree on `main` still exist if you need scripts or bundles outside Stereo Hub.
+> Older flow: **v0.5** [`Updates.zip`](https://github.com/o9ll/stereo/releases/tag/v0.5) and the full [`Updates/`](https://github.com/o9ll/stereo/tree/main/Updates) tree on `main` still exist if you need scripts or bundles outside Stereo MIN.
 
 ## 👋 Are You New Here?
 
@@ -64,9 +64,9 @@
 
 |  |  |
 |:---|:---|
-| 📦 **GitHub Releases** | **[Latest Stereo Hub](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/releases/latest)** · [all releases](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/releases) |
+| 📦 **GitHub Releases** | **[Latest Stereo MIN](https://github.com/o9ll/stereo/releases/latest)** · [all releases](https://github.com/o9ll/stereo/releases) |
 | 🍎 **macOS** | [**macOS**](#macos) |
-| 🔗 **Latest scripts** | **[`Updates/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates)** on `main` |
+| 🔗 **Latest** | **[Scripts on `main`](https://github.com/o9ll/stereo/tree/main)** (root `.bat` / `.ps1` / `.py`) |
 
 <a id="windows-voice-fixer"></a>
 
@@ -76,14 +76,14 @@ Drops pre-patched `discord_voice.node` (with backup). **No compiler.**
 
 ### Quick steps
 
-1. Grab [`Stereo Installer.bat`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/raw/main/Updates/Windows/Stereo%20Installer.bat) from [`Updates/Windows/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates/Windows).
+1. Grab [`StereoInstaller.bat`](https://github.com/o9ll/stereo/raw/main/StereoInstaller.bat) from [`main`](https://github.com/o9ll/stereo/tree/main).
 2. **Right-click → Run as administrator.**
-3. In **DiscordVoiceFixer**, pick clients; Discord is restarted for you.
+3. In **Stereo Installer**, pick clients; Discord is restarted for you.
 
 <details>
 <summary>📝 Optional detail</summary>
 
-The `.bat` fetches [`DiscordVoiceFixer.ps1`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Windows/DiscordVoiceFixer.ps1) from `main`. Admin avoids permission issues under `%LOCALAPPDATA%\Discord\`.
+The `.bat` fetches [`StereoInstaller.ps1`](https://github.com/o9ll/stereo/blob/main/StereoInstaller.ps1) from `main`. Admin avoids permission issues under `%LOCALAPPDATA%\Discord\`.
 
 </details>
 
@@ -93,20 +93,20 @@ The `.bat` fetches [`DiscordVoiceFixer.ps1`](https://github.com/ProdHallow/Disco
 
 ## 🐧 Linux — Stereo launcher
 
-[`discord-stereo-launcher.sh`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Linux/discord-stereo-launcher.sh) fetches the patcher, installer, and `Discord_Stereo_Installer_For_Linux.py` into **`Linux Stereo Installer/`** and opens a **GUI** (installer vs patcher). **Installer** = **placeholder**; for now the patcher path is **filterless** only, **not** true **stereo** — **use patcher mode.**
+[`discord-stereo-launcher.sh`](https://github.com/o9ll/stereo/blob/main/Updates/Linux/discord-stereo-launcher.sh) fetches the patcher, installer, and `Discord_Stereo_Installer_For_Linux.py` into **`Linux Stereo Installer/`** and opens a **GUI** (installer vs patcher). **Installer** = **placeholder**; for now the patcher path is **filterless** only, **not** true **stereo** — **use patcher mode.**
 
 ### Quick steps
 
 1. Install dependencies (Debian/Ubuntu examples):
    - `sudo apt install g++ python3 python3-tk` (C++ for patcher, tk for GUI)
-2. Download **[`discord-stereo-launcher.sh`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/raw/main/Updates/Linux/discord-stereo-launcher.sh)** from [`Updates/Linux/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates/Linux).
+2. Download **[`discord-stereo-launcher.sh`](https://github.com/o9ll/stereo/raw/main/Updates/Linux/discord-stereo-launcher.sh)** from [`Updates/Linux/`](https://github.com/o9ll/stereo/tree/main/Updates/Linux).
 3. `chmod +x` and `./discord-stereo-launcher.sh` → **patcher mode** (test installer if you need).
 
 ### Patcher only (no GUI)
 
 <a id="linux-voice-patcher"></a>
 
-**CLI:** [`Updates/Linux/Updates/discord_voice_patcher_linux.sh`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Linux/Updates/discord_voice_patcher_linux.sh) — `g++`, `chmod +x`, `./discord_voice_patcher_linux.sh --help`
+**CLI:** [`Updates/Linux/Updates/discord_voice_patcher_linux.sh`](https://github.com/o9ll/stereo/blob/main/Updates/Linux/Updates/discord_voice_patcher_linux.sh) — `g++`, `chmod +x`, `./discord_voice_patcher_linux.sh --help`
 
 ---
 
@@ -116,7 +116,7 @@ The `.bat` fetches [`DiscordVoiceFixer.ps1`](https://github.com/ProdHallow/Disco
 
 For when **[Voice Fixer](#windows-voice-fixer)** is not enough: custom offsets, odd installs, or you want to change patch behavior. Downloads the script, **compiles a small C++ tool**, patches `discord_voice.node` in place. **Requires a C++ compiler** (VS with “Desktop development with C++”, or MinGW-w64).
 
-Run [`Stereo-Node-Patcher-Windows.BAT`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Windows/Stereo-Node-Patcher-Windows.BAT) (pulls [`Discord_voice_node_patcher.ps1`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Windows/Discord_voice_node_patcher.ps1) from `main`). Bad match? [**Offset Finder**](#offset-finder) → **copy** block → **paste** into offsets in `Discord_voice_node_patcher.ps1` → re-run.
+Run [`StereoPatcher.bat`](https://github.com/o9ll/stereo/blob/main/StereoPatcher.bat) (pulls [`StereoPatcher.ps1`](https://github.com/o9ll/stereo/blob/main/StereoPatcher.ps1) from `main`). Bad match? [**Offset Finder**](#offset-finder) → **copy** block → **paste** into offsets in `StereoPatcher.ps1` → re-run.
 
 ---
 
@@ -124,8 +124,8 @@ Run [`Stereo-Node-Patcher-Windows.BAT`](https://github.com/ProdHallow/Discord-St
 
 ## 🧰 Offset Finder
 
-Point the **Offset Finder** at **your** `discord_voice.node` → **copy the block** it prints → **paste the offsets** into the **offsets** section in your patcher script: **`Discord_voice_node_patcher.ps1`** (Windows) or **`discord_voice_patcher_linux.sh`** (Linux), then re-run the patcher.  
-Scripts: [CLI `discord_voice_node_offset_finder_v5.py`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Offset%20Finder/discord_voice_node_offset_finder_v5.py) · [GUI `offset_finder_gui.py`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Offset%20Finder/offset_finder_gui.py) in [`Updates/Offset Finder/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates/Offset%20Finder) · **macOS (Swift):** [Codeberg](https://codeberg.org/DiscordStereoPatcher-macOS) if up, else **[macOS](#macos)** (section below, outside this toggle).
+Point the **Offset Finder** at **your** `discord_voice.node` → **copy the block** it prints → **paste the offsets** into the **offsets** section in your patcher script: **`StereoPatcher.ps1`** (Windows) or **`discord_voice_patcher_linux.sh`** (Linux), then re-run the patcher.  
+Scripts: [CLI `StereoFinder.py`](https://github.com/o9ll/stereo/blob/main/StereoFinder.py) · [GUI `StereoFinderGUI.py`](https://github.com/o9ll/stereo/blob/main/StereoFinderGUI.py) in [`main/`](https://github.com/o9ll/stereo/tree/main) · **macOS (Swift):** [Codeberg](https://codeberg.org/DiscordStereoPatcher-macOS) if up, else **[macOS](#macos)** (section below, outside this toggle).
 
 ---
 
@@ -150,13 +150,14 @@ Enable **filterless true stereo** at **high bitrates** in Discord — with empha
 
 | Path | Contents |
 |------|----------|
-| [`Updates/Windows/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates/Windows) | Voice Fixer, Advanced Windows patching (`.BAT` + PS1) |
-| [`Updates/Linux/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates/Linux) | **[`discord-stereo-launcher.sh`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Linux/discord-stereo-launcher.sh)** (main entry — GUI mode picker); `Updates/Linux/Updates/` — patcher + installer scripts |
-| [`Updates/Offset Finder/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates/Offset%20Finder) | Offset finder CLI and GUI |
-| [`Updates/Nodes/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Updates/Nodes) | `Unpatched` / `Patched` reference voice bundles (see subfolders) |
-| — | **macOS (Swift):** not in `Updates/` here — [Codeberg](https://codeberg.org/DiscordStereoPatcher-macOS) · [**macOS**](#macos) |
+| Root | `StereoInstaller.bat` / `.ps1`, `StereoPatcher.bat` / `.ps1`, `StereoMIN.py`, `StereoFinder.py`, `StereoFinderGUI.py` |
+| [`installer/Windows/`](https://github.com/o9ll/stereo/tree/main/installer/Windows) | Pre-patched voice module bundle (Stereo Installer / Stereo MIN) |
+| [`patcher/Windows/`](https://github.com/o9ll/stereo/tree/main/patcher/Windows) | Reference / backup voice module bundle (Stereo Patcher) |
+| [`settings.json`](https://github.com/o9ll/stereo/blob/main/settings.json) | Equalizer APO settings (Stereo Installer) |
+| — | **Linux / macOS scripts:** legacy `Updates/` tree on [v0.5](https://github.com/o9ll/stereo/releases/tag/v0.5); new layout coming |
+| — | **macOS (Swift):** not in here — [Codeberg](https://codeberg.org/DiscordStereoPatcher-macOS) · [**macOS**](#macos) |
 
-[`Voice Node Dump/`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/tree/main/Voice%20Node%20Dump) (repo root) — research / archives
+[`Voice Node Dump/`](https://github.com/o9ll/stereo/tree/main/Voice%20Node%20Dump) (repo root) — research / archives
 
 </details>
 
@@ -188,10 +189,10 @@ MSVC / Clang and register choices differ per build.
 <summary><b>📋 Changelog</b></summary>
 
 ### `main` (now)
-Tags: **[latest Stereo Hub](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/releases/latest)** (`discord_stereo_hub.py`), legacy **[v0.5](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/releases/tag/v0.5)** (`Updates.zip`). **Codeberg** (macOS) down → [**macOS**](#macos)
+Tags: **[latest Stereo MIN](https://github.com/o9ll/stereo/releases/latest)** (`StereoMIN.py`), legacy **[v0.5](https://github.com/o9ll/stereo/releases/tag/v0.5)** (`Updates.zip`). **Codeberg** (macOS) down → [**macOS**](#macos)
 
 ### Repo layout (Mar 2026)
-- Shipping assets under `Updates/`; `Voice Node Dump/` for archives
+- Shipping assets under `installer/` and `patcher/` (platform subfolders); `Voice Node Dump/` for archives
 
 ### v6.0 (Feb 2026)
 - macOS **Swift** GUI on Codeberg; Linux bash patcher; platform-specific bytes; mmap I/O on Unix
@@ -210,7 +211,7 @@ Tags: **[latest Stereo Hub](https://github.com/ProdHallow/Discord-Stereo-Windows
 
 ## 🍎 macOS
 
- The **Codeberg** is **still down**; the **macOS** build is **moving** here. When it’s up it will be available as an advanced patch method, and the patched **macOS nodes** will be available in **Stereo Hub** — thanks to the Devs **[Crüe](https://codeberg.org/DiscordStereoPatcher-macOS)** and **[HorrorPills / Geeko](https://codeberg.org/DiscordStereoPatcher-macOS)**.
+ The **Codeberg** is **still down**; the **macOS** build is **moving** here. When it’s up it will be available as an advanced patch method, and the patched **macOS nodes** will be available in **Stereo MIN** — thanks to the Devs **[Crüe](https://codeberg.org/DiscordStereoPatcher-macOS)** and **[HorrorPills / Geeko](https://codeberg.org/DiscordStereoPatcher-macOS)**.
 
 ---
 
@@ -321,9 +322,9 @@ Some **VPNs** break voice UDP. Disconnect the VPN and test again; try another se
 <details>
 <summary><b>Voice Fixer vs Advanced Windows patching</b></summary>
 
-**Voice Fixer** ([`Stereo Installer.bat`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Windows/Stereo%20Installer.bat) → [`DiscordVoiceFixer.ps1`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Windows/DiscordVoiceFixer.ps1)) installs **pre-patched** `discord_voice.node` files. **No compiler.**
+**Voice Fixer** ([`Stereo Installer.bat`](https://github.com/o9ll/stereo/blob/main/StereoInstaller.bat) → [`StereoInstaller.ps1`](https://github.com/o9ll/stereo/blob/main/StereoInstaller.ps1)) installs **pre-patched** `discord_voice.node` files. **No compiler.**
 
-**Advanced Windows patching** ([`Stereo-Node-Patcher-Windows.BAT`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Windows/Stereo-Node-Patcher-Windows.BAT) → [`Discord_voice_node_patcher.ps1`](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/blob/main/Updates/Windows/Discord_voice_node_patcher.ps1)) builds the patcher on your machine and edits the binary. **Needs a C++ compiler.** Use when Voice Fixer isn’t enough — new Discord build, custom offsets, or you want full control.
+**Advanced Windows patching** ([`StereoPatcher.bat`](https://github.com/o9ll/stereo/blob/main/StereoPatcher.bat) → [`StereoPatcher.ps1`](https://github.com/o9ll/stereo/blob/main/StereoPatcher.ps1)) builds the patcher on your machine and edits the binary. **Needs a C++ compiler.** Use when Voice Fixer isn’t enough — new Discord build, custom offsets, or you want full control.
 
 **Linux:** [stereo launcher](#linux-launcher) → **patcher** (installer = placeholder; patch = **filterless** only, not true **stereo**). Or [CLI `discord_voice_patcher_linux.sh`](#linux-voice-patcher).
 
@@ -341,7 +342,7 @@ Some **VPNs** break voice UDP. Disconnect the VPN and test again; try another se
 
 ## 💬 Get involved
 
-**[Report an issue](https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/issues)** · **[Join the Discord](https://discord.gg/gDY6F8RAfM)**
+**[Report an issue](https://github.com/o9ll/stereo/issues)** · **[Join the Discord](https://discord.gg/gDY6F8RAfM)**
 
 ---
 
