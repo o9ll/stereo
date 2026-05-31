@@ -48,7 +48,7 @@ $DiscordClients = [ordered]@{
 }
 
 $UPDATE_URL = "https://raw.githubusercontent.com/o9ll/stereo/main/StereoInstaller.ps1"
-$VOICE_BACKUP_API = "https://api.github.com/repos/o9ll/stereo/contents/installer/Windows?ref=main"
+$VOICE_BACKUP_API = "https://api.github.com/repos/o9ll/stereo/contents/installer?ref=main"
 $SETTINGS_JSON_URL = "https://raw.githubusercontent.com/o9ll/stereo/main/settings.json"
 $DISCORD_SETUP_URL = "https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x64"
 

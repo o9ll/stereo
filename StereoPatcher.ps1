@@ -362,7 +362,7 @@ $Script:Config = @{
     LogFile = "$env:USERPROFILE\.stereo\patcher\patcher.log"; ConfigFile = "$env:USERPROFILE\.stereo\patcher\config.json"
     MaxBackupsPerClient = 3
     MaxBackupAgeDays      = 45
-    VoiceBackupAPI = "https://api.github.com/repos/o9ll/stereo/contents/patcher/Windows"
+    VoiceBackupAPI = "https://api.github.com/repos/o9ll/stereo/contents/patcher"
     OffsetsMeta = $Script:OffsetsMeta
     Offsets     = $Script:Offsets
 }

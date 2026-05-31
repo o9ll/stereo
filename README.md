@@ -151,8 +151,8 @@ Enable **filterless true stereo** at **high bitrates** in Discord — with empha
 | Path | Contents |
 |------|----------|
 | Root | `StereoInstaller.bat` / `.ps1`, `StereoPatcher.bat` / `.ps1`, `StereoMIN.py`, `StereoFinder.py`, `StereoFinderGUI.py` |
-| [`installer/Windows/`](https://github.com/o9ll/stereo/tree/main/installer/Windows) | Pre-patched voice module bundle (Stereo Installer / Stereo MIN) |
-| [`patcher/Windows/`](https://github.com/o9ll/stereo/tree/main/patcher/Windows) | Reference / backup voice module bundle (Stereo Patcher) |
+| [`installer/`](https://github.com/o9ll/stereo/tree/main/installer) | Pre-patched voice module bundle (Stereo Installer / Stereo MIN) |
+| [`patcher/`](https://github.com/o9ll/stereo/tree/main/patcher) | Reference / backup voice module bundle (Stereo Patcher) |
 | [`settings.json`](https://github.com/o9ll/stereo/blob/main/settings.json) | Equalizer APO settings (Stereo Installer) |
 | — | **Linux / macOS scripts:** legacy `Updates/` tree on [v0.5](https://github.com/o9ll/stereo/releases/tag/v0.5); new layout coming |
 | — | **macOS (Swift):** not in here — [Codeberg](https://codeberg.org/DiscordStereoPatcher-macOS) · [**macOS**](#macos) |
